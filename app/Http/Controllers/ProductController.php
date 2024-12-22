@@ -71,7 +71,27 @@ class ProductController extends Controller
     }
 
 
+    public function destroy($product): \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+    {
+        // Check if $product is an instance of Product or an ID
+        if ($product instanceof Product) {
+            // Direct model binding (e.g., route model binding)
+            $product->delete();
+        } else {
+            // $product is an ID; find the product and delete it
+            $product = Product::findOrFail($product);
+            $product->delete();
+        }
 
+        // Handle response based on the request type (AJAX or normal HTTP request)
+        if (request()->expectsJson()) {
+            return response()->json([
+                'message' => 'Product deleted successfully.'
+            ]);
+        }
+
+        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+    }
 
 
 }

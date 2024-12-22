@@ -57,6 +57,7 @@
                             </button>
                         </form>
 
+                        <button class="btn btn-danger delete-btn" data-id="{{ $product->id }}">Delete (AJAX)</button>
 
                     </div>
                 </td>
@@ -93,7 +94,26 @@
                 }
             });
         });
+        $(document).on('click', '.delete-btn', function () {
+            let id = $(this).data('id');
 
+            if (confirm('Are you sure you want to delete this product?')) {
+                $.ajax({
+                    url: `/products/${id}`,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                    },
+                    success: function () {
+                        $(`button[data-id="${id}"]`).closest('tr').remove();
+                        alert('Product deleted successfully!');
+                    },
+                    error: function () {
+                        alert('Failed to delete product.');
+                    }
+                });
+            }
+        });
 
     </script>
 @endsection
