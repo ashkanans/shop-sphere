@@ -7,6 +7,12 @@
     <div style="margin-bottom: 20px; text-align: right;">
         <a href="{{ route('products.create') }}" class="btn btn-primary">+ Create Product</a>
     </div>
+    <div style="display: flex; align-items: center; margin-bottom: 20px;">
+        <input type="text" id="search"
+               placeholder="Search products by name or description"
+               style="flex: 1; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+        <button class="btn btn-blue search-btn" style="margin-left: 10px;">Go</button>
+    </div>
 
     <!-- Product Table -->
     <table border="1" cellpadding="10" cellspacing="0" width="100%">
@@ -23,7 +29,7 @@
             <th>Actions</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="product-table-body">
         @foreach ($products as $product)
             <tr>
                 <td>
@@ -113,6 +119,26 @@
                     }
                 });
             }
+        });
+        $(document).on('click', '.search-btn', function () {
+            let query = $('#search').val();
+
+                // Send AJAX request to search route
+                $.ajax({
+                    url: '{{ route('products.search') }}',
+                    type: 'GET',
+                    data: { query: query },
+                    success: function (data) {
+                        if (data.trim() === '') {
+                            $('#product-table-body').html('<tr><td colspan="9" style="text-align: center;">No products found.</td></tr>');
+                        } else {
+                            $('#product-table-body').html(data);
+                        }
+                    },
+                    error: function () {
+                        alert('Failed to fetch products.');
+                    }
+                });
         });
 
     </script>

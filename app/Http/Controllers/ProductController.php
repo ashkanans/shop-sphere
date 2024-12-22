@@ -93,5 +93,33 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
 
+    public function search(Request $request)
+    {
+        // Capture the search query from the request
+        $query = $request->input('query');
+
+        // Check if query exists; if not, return all products
+        if (!$query) {
+            return response()->json([
+                'products' => [],
+                'message' => 'No query provided.'
+            ], 400);
+        }
+
+        // Fetch products based on the search criteria
+        $products = Product::with('category', 'productDetail')
+            ->where('name', 'like', "%$query%") // Search by name
+            ->orWhere('description', 'like', "%$query%") // Search by description
+            ->paginate(10); // Paginate results
+
+        // Return a partial view for AJAX requests
+        if ($request->ajax()) {
+            return view('products.partials.table', compact('products'))->render();
+        }
+
+        // For non-AJAX fallback, return the full view
+        return view('products.index', compact('products'));
+    }
+
 
 }
