@@ -36,3 +36,9 @@ Route::resource('products', ProductController::class);
 Route::resource('categories', CategoryController::class);
 Route::resource('products', ProductController::class);
 Route::resource('orders', OrderController::class);
+
+Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+Route::get('/product-details/{product}', [ProductController::class, 'show'])->name('products.show');
+

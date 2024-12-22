@@ -9,7 +9,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with(['category', 'productDetail'])->paginate(10);
         return view('products.index', compact('products'));
     }
 
@@ -35,12 +35,16 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        // Load related data
+        $product->load('category', 'productDetail');
+
         return view('products.show', compact('product'));
     }
 
+
     public function edit(Product $product)
     {
-        return view('products.create', compact('product'));
+        return view('products.edit', compact('product'));
     }
 
     public function update(Request $request, Product $product)
@@ -50,6 +54,7 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
         $product->update($validated);
@@ -57,10 +62,11 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
+
     public function destroy(Product $product)
     {
         $product->delete();
-
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
+
 }
