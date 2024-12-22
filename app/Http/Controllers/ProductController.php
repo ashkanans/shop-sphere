@@ -7,11 +7,25 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['category', 'productDetail'])->paginate(10);
+        $column = $request->input('column', 'id'); // Default column to sort by
+        $order = $request->input('order', 'asc'); // Default sort order
+
+        // Fetch products with sorting
+        $products = Product::with('category', 'productDetail')
+            ->orderBy($column, $order)
+            ->paginate(10);
+
+        // Return partial view for AJAX requests
+        if ($request->ajax()) {
+            return view('products.partials.table', compact('products'))->render();
+        }
+
+        // Full view for non-AJAX requests
         return view('products.index', compact('products'));
     }
+
 
     public function create()
     {
