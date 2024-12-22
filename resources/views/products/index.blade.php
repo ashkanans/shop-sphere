@@ -26,14 +26,19 @@
         <tbody>
         @foreach ($products as $product)
             <tr>
-                <td>{{ $product->id }}</td>
                 <td>
                     <a href="{{ route('products.show', $product) }}" title="View Product Details">
-                        {{ $product->name }}
+                        {{ $product->id }}
                     </a>
                 </td>
+                <td contenteditable="true" class="editable" data-id="{{ $product->id }}" data-field="name">
+                    {{ $product->name }}
+                </td>
                 <td>{{ $product->description }}</td>
-                <td>${{ number_format($product->price, 2) }}</td>
+                <td contenteditable="true" class="editable" data-id="{{ $product->id }}" data-field="price">
+                    {{ $product->price }}
+                </td>
+
                 <td>{{ $product->stock }}</td>
                 <td>{{ $product->category->name ?? 'N/A' }}</td>
                 <td>{{ $product->productDetail->specifications ?? 'N/A' }}</td>
@@ -51,6 +56,8 @@
                                 Delete
                             </button>
                         </form>
+
+
                     </div>
                 </td>
             </tr>
@@ -62,4 +69,31 @@
     <div style="margin-top: 20px; text-align: center;">
         {{ $products->links() }}
     </div>
+
+@endsection
+@section('scripts')
+    <script>
+        $(document).on('blur', '.editable', function () {
+            let id = $(this).data('id');
+            let field = $(this).data('field');
+            let value = $(this).text();
+
+            $.ajax({
+                url: `/products/${id}`,
+                type: 'PUT',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    [field]: value,
+                },
+                success: function (response) {
+                    alert('Product updated successfully!');
+                },
+                error: function (xhr) {
+                    alert('Failed to update product.');
+                }
+            });
+        });
+
+
+    </script>
 @endsection
