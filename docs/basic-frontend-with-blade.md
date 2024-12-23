@@ -44,6 +44,7 @@ Blade is Laravel's lightweight templating engine that allows embedding PHP code 
 #### **Structure: Header, Footer, and Navigation**
 
 Example:
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -53,24 +54,24 @@ Example:
     <title>Basic Template</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
 
-    <main>
-        <h1>Welcome to the Homepage</h1>
-        <p>This is a basic HTML template.</p>
-    </main>
+<main>
+    <h1>Welcome to the Homepage</h1>
+    <p>This is a basic HTML template.</p>
+</main>
 
-    <footer>
-        <p>&copy; 2024 My Website</p>
-    </footer>
+<footer>
+    <p>&copy; 2024 My Website</p>
+</footer>
 </body>
 </html>
 ```
